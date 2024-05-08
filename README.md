@@ -1,58 +1,63 @@
 # MicroServo
 
-## 简介
+## Introduction
 
-MicroServo 是一个为微服务系统设计的综合基准测试框架，通过三种数据收集模式（日志、追踪和性能指标）、自定义的故障注入以及支持在线算法部署的能力，为研究人员和开发者提供了一个实用的工具。该框架使用户能在模拟的生产环境中生成、监控和诊断各种故障场景，同时测试和开发新算法。
+MicroServo is a comprehensive benchmarking framework designed for microservices systems, featuring three modes of data collection (logs, tracing, and performance metrics), customizable fault injection, and support for online algorithm deployment. This framework provides researchers and developers with a practical tool to generate, monitor, and diagnose various fault scenarios in a simulated production environment, while also testing and developing new algorithms.
 
 ![platform](imgs/主页.png)
-## 目的
-MicroServo 的主要目的是提高微服务系统的弹性和效率。通过提供详细的故障模拟和数据收集工具，MicroServo 让研究人员和工业界从业者可以在控制的环境下评估和优化他们的系统和算法，确保微服务架构的稳定性和可扩展性。
 
-## 功能
-- 数据监控：MicroServo 能够从微服务系统中自动收集日志、追踪和性能指标数据，并将其处理成标注好的数据集，便于分析和模型训练。
-- 故障注入：用户可以自定义故障类型和参数，利用 MicroServo 进行故障注入，以测试系统的恢复能力和故障检测算法的效果。
-- 算法在线部署：MicroServo 支持用户上传和部署自定义算法，实现在线算法测试和调整，提高研发效率和算法性能。
+## Purpose
 
-## 安装部署
+The primary goal of MicroServo is to enhance the resilience and efficiency of microservices systems. By offering detailed fault simulation and data collection tools, MicroServo enables researchers and industry practitioners to assess and optimize their systems and algorithms in a controlled environment, ensuring the stability and scalability of microservices architectures.
 
-### 集群
-1. 安装集群管理工具及相关依赖
+## Features
 
-执行`doc_addons`下的`1.install_dep.sh`，安装`minikube`,`docker`,`kubectl`,`helm`
+- Data Monitoring: MicroServo can automatically collect logs, traces, and performance metrics from microservices systems, processing them into labeled datasets for analysis and model training.
+- Fault Injection: Users can customize fault types and parameters using MicroServo to inject faults and test the system's recovery capabilities and the effectiveness of fault detection algorithms.
+- Online Algorithm Deployment: MicroServo supports the uploading and deployment of custom algorithms, enabling online algorithm testing and adjustment to enhance research and development efficiency and algorithm performance.
+
+
+## Installation and Deployment
+
+### Cluster
+
+1. Install Cluster Management Tools and Dependencies
+
+Run 1.install_dep.sh from doc_addons to install minikube, docker, kubectl, helm.
 
 ```
 bash 1.install_dep.sh
 ```
-> 如果遇到系统问题或网络问题执行命令失败，可自行安装以上工具
+> If you encounter system or network issues during command execution, you can manually install the above tools.
 
-2. 使用`minikube`部署单节点集群
+2. Deploy a Single Node Cluster Using minikube
 
-执行`doc_addons`下的`2.deploy_instance.sh`，部署`minikube`集群
+Execute 2.deploy_instance.sh from doc_addons to deploy the minikube cluster.
 
 ```
 bash 2.deploy_instance.sh
 ```
+> You may adjust the minikube configuration within the script.
+> If a proxy is needed, execute the 2.deploy_instance_proxy.sh script.
 
-> 可自行调整脚本中`minikube`的相关配置 \
-> 如果需要配置代理，可以执行`2.deploy_instance_proxy.sh`脚本
+After installation, run minikube --profile your_profile_name status to verify if the minikube cluster is successfully deployed.
+> Running minikube ssh allows you to log into the cluster virtual machine.
 
-安装完成后，执行`minikube --profile your_profile_name status`，即可验证`minikube`集群是否部署成功
-> 运行`minikube ssh`可以登录集群虚拟机
+### Observability Tools
 
-### 观测工具
-1. 安装`mysql`
+1. Install mysql
 
-docker安装mysql镜像，其中：容器名称 mysql-container 密码 your_password，建议使用mysql5.7版本
+Install MySQL using Docker, with container name as mysql-container and password as your_password, recommended version is MySQL 5.7.
 
 ```SQL
 docker run -d --name mysql-container -e MYSQL_ROOT_PASSWORD=elastic -p 3306:3306 mysql:5.7
 ```
 
-然后修改mysql的字符集配置，然后重启`mysql`
+Then modify the MySQL character set configuration and restart mysql.
 
-> 若使用 `mysql：5.7`及以上版本，还需要修改`sql_mode`，使其支持空值
+> If using mysql:5.7 or higher, also modify sql_mode to support null values.
 
-2. 创建`chaos_mesh`数据库
+2. Create chaos_mesh Database
 
 ```Bash
 docker exec -it mysql-container bash
@@ -60,80 +65,69 @@ mysql -u root -pelastic
 CREATE DATABASE chaos_mesh;
 ```
 
-3. 执行`doc_addons`下的`3.observatory.sh`，安装`apm-server`,`elasticsearch`,`filebeat`,`logstash`,`prometheus`,`chaosmesh`,`kibana`,`istio`
+3. Execute 3.observatory.sh from doc_addons to install apm-server, elasticsearch, filebeat, logstash, prometheus, chaosmesh, kibana, istio.
 
-首先修改脚本中`dashboard.env.DATABASE_DATASOURCE`字段，填入步骤1中的ip和端口号
+First, modify the dashboard.env.DATABASE_DATASOURCE field in the script with the IP and port number from step 1.
 
 ```
 bash 3.observatory.sh
 ```
+> Run kubectl get pods -n observe, kubectl get pods -n istio-system to check installation status.
 
-> 运行`kubectl get pods -n observe`, `kubectl get pods -n istio-system`即可查看安装情况
+4. Perform Port Forwarding
 
-3. 执行端口转发
-
-执行`doc_addons`下的`5.port_forward.sh`，将`elasticsearch`,`prometheus`,`chaosmesh`,`kibana`的端口映射到服务器的端口
-
-`elasticsearch`为9200, `prometheus`为9090, `chaosmesh`为2333, `kibana`为5601
-
-> 若有冲突可自行更换
+Execute 5.port_forward.sh from doc_addons to map the ports of elasticsearch, prometheus, chaosmesh, kibana to the server's ports.Ports are: elasticsearch at 9200, prometheus at 9090, chaosmesh at 2333, kibana at 5601.
 
 ```
 bash 5.port_forward.sh
 ```
+> If there are conflicts, ports can be changed as needed.
 
-4. 为`elasticsearch`添加`elastic apm`
+5. Add elastic apm to elasticsearch
 
-- 在kibana搜索框内搜索elastic apm
+- Search for elastic apm in the Kibana search bar.
 
 ![3](imgs/3.png)
-   
-- 配置 APM-server 的 IP
-    
-执行`kubectl get svcs -n observe`查看apm-server的IP
+
+- Configure the IP of the APM-server.Execute kubectl get svcs -n observe to view the IP of apm-server.
 
 ![1](imgs/1.png)
 
-- 配置secret：（注意，请将secret设置为`elastic`，请勿修改为其他值）
+- Configure the secret: (Note, please set the secret to elastic, do not change to another value.)
 
 ![2](imgs/2.png)
 
-### 微服务系统
+### Microservice System
 
-1. 构建镜像
+1. Build Images
 
-修改`make-docker-images.sh`中的`REPO_PREFIX`为自己的`docker`仓库
-
-执行`onlineboutique/hack`下的`make-docker-images.sh`，构建不同微服务的镜像
+Modify REPO_PREFIX in make-docker-images.sh to your own docker repository.Execute make-docker-images.sh from onlineboutique/hack to build images for different microservices.
 
 ```
 bash make-docker-images.sh
 ```
 
-2. 部署微服务
+2. Deploy Microservices
 
-修改`faultinjectionplatform/helm-chart/values.yaml`文件，将`images.repository`和`images.tag`修改为步骤1中的内容
+Modify faultinjectionplatform/helm-chart/values.yaml, setting images.repository and images.tag to match those in step 1.
 
-在`faultinjectionplatform`下执行
+From faultinjectionplatform, run:
 
 ```
 helm install onlineboutique -n default ./helm-chart
 ```
+> Execute kubectl get pods to check installation status.
 
-> 执行`kubectl get pods`查看安装情况
+### Backend
 
-### 后端
-
-1. 创建`conda`环境
-
-修改`platform_backend`下`environment.yml`中的`prefix`字段，改为想要取的新环境名称
+1. Create conda EnvironmentModify the prefix field in environment.yml within platform_backend to the new environment name you prefer.
 
 ```
 conda env create -f environment.yml
 conda activate XXXX
 ```
 
-2. 创建数据库
+2. Create Database
 
 ```Bash
 docker exec -it mysql-container bash
@@ -141,9 +135,9 @@ mysql -u root -pelastic
 CREATE DATABASE work;
 ```
 
-3. 配置django与mysql的连接
+3. Configure Django and MySQL Connection
 
-在`platform_backend/platform_backend/settings.py`文件下，更改配置信息
+In platform_backend/platform_backend/settings.py, update the configuration details.
 
 ```Python
 DATABASES = {
@@ -158,46 +152,48 @@ DATABASES = {
 }
 ```
 
-4. 修改`config.yaml`中的`prometheus`和`elasticsearch`的url
+4. Modify config.yaml for prometheus and elasticsearch URLs
 
-5. 运行以下命令来应用数据库的表结构迁移：
+5. Apply Database Schema Migrations
 
 ```Bash
 python manage.py migrate
 ```
 
-6. 运行django服务器：
+6. Run the Django Server
 
 ```Bash
 python manage.py runserver 0.0.0.0:Your_port
 ```
-### 前端
 
-1. 配置好`node`和`npm`
+### Frontend
 
-2. 修改`platform_frontend/config/index.js`中`target`字段，为`Your_port`
+1. Set Up node and npm
 
-3. 在`platform_frontend`下执行
+2. Modify target Field in platform_frontend/config/index.js to Your_port
+
+3. From platform_frontend, execute:
 
 ```
 npm install
 npm run dev
 ```
 
-## 可能的问题
+## Possible Issue
 
-### kibana代理配置
+### Kibana Proxy Configuration
 
-kibana在内网部署时，有可能需要配置代理
-> 1. 在 kibana.yml 中添加 xpack.fleet.registryProxyUrl
->     kibanaConfig:
->     kibana.yml: |
->           xpack.fleet.registryProxyUrl: "your-nat-gateway.corp.net"
-> 2. 在 extraEnvs 中添加 NOD_EXTRA_CA_CERTS
->     NODE_EXTRA_CA_CERTS="/etc/kibana/certs/ca-cert.pem"
+If deploying Kibana internally, you may need to configure a proxy.
 
-### 镜像构建的代理问题
+> 1. Add xpack.fleet.registryProxyUrl in kibana.yml:
+>   kibanaConfig:
+>   kibana.yml: |
+>       xpack.fleet.registryProxyUrl: "your-nat-gateway.corp.net"
+> 2. Add NOD_EXTRA_CA_CERTS in extraEnvs:
+>   NODE_EXTRA_CA_CERTS="/etc/kibana/certs/ca-cert.pem"
 
-在创建镜像之前，如果是在内网环境中，还需要对镜像源进行替换。可以通过脚本方式对dockerfile进行修改。
+### Image Building Proxy Issue
 
-但是如果服务器配置了代理，可以在每个微服务的dockerfile里添加代理，如果构建时还是发现镜像无法拉取，则再选择替换源。
+Before building images, if you are within an internal network, you may need to replace the image source via a script.
+
+However, if a proxy is configured on the server, you can add the proxy settings to each microservice's Dockerfile. If image fetching issues persist during build, consider changing the source.
