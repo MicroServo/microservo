@@ -22,7 +22,7 @@ SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 log() { echo "$1" >&2; }
 
 APM_IP=$(kubectl get service apm-server-apm-server -n observe -o jsonpath="{.spec.clusterIP}")
-TAG=0.0.2
+TAG=0.0.1
 REPO_PREFIX=wjjdoraemon
 
 TAG="${TAG:?TAG env variable must be specified}"
@@ -37,7 +37,7 @@ while IFS= read -d $'\0' -r dir; do
     then
         builddir="${dir}/src"
     fi
-    if [[ $svcname == "adservice" || $svcname == "protos" ]] 
+    if [[ $svcname == "protos" ]] 
     then
         continue
     fi
@@ -54,20 +54,9 @@ while IFS= read -d $'\0' -r dir; do
             sed -i "s|serverUrl: '.\+'|serverUrl: 'http://${APM_IP}:8200'|g" server.js
         fi
 
-        # docker build --pull -t "${image}" .
-
         docker build -t "${image}" . 
         log "Pushing: ${image}"
         docker push "${image}"
-
-        # if [ $svcname != "frontend" ] && [ $svcname != "loadgenerator" ]
-        # then
-        #     log "Building: ${image}-native-grpc-probes"
-        #     # docker build --pull -t "${image}-native-grpc-probes" . --target without-grpc-health-probe-bin
-        #     docker build -t "${image}-native-grpc-probes" . --target without-grpc-health-probe-bin 
-        #     log "Pushing: ${image}-native-grpc-probes"
-        #     docker push "${image}-native-grpc-probes"
-        # fi
     )
 done < <(find "${SCRIPTDIR}/../src" -mindepth 1 -maxdepth 1 -type d -print0)
 

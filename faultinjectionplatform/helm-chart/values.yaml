@@ -46,10 +46,6 @@ seccompProfile:
   enable: false
   type: RuntimeDefault
 
-adService:
-  create: false
-  name: adservice
-
 cartService:
   create: true
   name: cartservice

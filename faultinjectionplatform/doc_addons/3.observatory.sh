@@ -39,12 +39,6 @@ else
     minikube image load logstash.tar
 fi
 
-if [ ! -f metricbeat.tar ] ; then
-    minikube image load docker.elastic.co/beats/metricbeat:8.7.1
-    minikube image save docker.elastic.co/beats/metricbeat:8.7.1 metricbeat.tar
-else
-    minikube image load metricbeat.tar
-fi
 
 cd observe
 kubectl create namespace observe
@@ -89,14 +83,17 @@ cd logstash/examples/elasticsearch
 helm install logstash -n observe --values=values.yaml ../../
 cd -
 
-# # prometheus
-cd prometheus/charts
-helm install prometheus -n observe ./prometheus
-cd -
-
-# # grafana
-helm install grafana ./grafana -n observe
-# # Get passwd: 
-# # kubectl get secret --namespace observe grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
 
 cd ..
+cd istio-system
+kubectl create namespace istio-system
+
+# istio
+helm install istio-base ./base -n istio-system --set defaultRevision=default
+helm install istiod ./istiod -n istio-system
+
+# prometheus
+cd prometheus/charts
+helm install prometheus -n istio-system ./prometheus
+cd -
+
