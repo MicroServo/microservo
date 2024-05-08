@@ -1,0 +1,63 @@
+# Copyright 2020 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+FROM eclipse-temurin:19@sha256:a0901c0803060995ca6e13d19756e3100987101ac33e3d7eb091d5477374282c as builder
+
+WORKDIR /app
+
+ENV ELASTIC_APM_SERVICE_NAME=adservice
+ENV ELASTIC_APM_SERVER_URL=http://10.100.10.22:8200
+ENV ELASTIC_APM_SECRET_TOKEN=elastic
+ENV ELASTIC_APM_LOG_FILE=stderr 
+ENV ELASTIC_APM_LOG_LEVEL=debug
+
+COPY ["build.gradle", "gradlew", "./"]
+COPY gradle gradle
+RUN chmod +x gradlew
+RUN ./gradlew downloadRepos
+
+COPY . .
+
+RUN chmod +x gradlew
+RUN ./gradlew installDist
+
+FROM eclipse-temurin:19.0.1_10-jre@sha256:a75ea64f676041562cd7d3a54a9764bbfb357b2bf1bebf46e2af73e62d32e36c as without-grpc-health-probe-bin
+
+RUN sed -i "s/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g" /etc/apk/repositories
+
+RUN apk update
+
+RUN apk add --no-cache ca-certificates
+
+# Download Stackdriver Profiler Java agent
+RUN mkdir -p /opt/cprof
+COPY profiler_java_agent_alpine.tar.gz .
+RUN tar -xzvf profiler_java_agent_alpine.tar.gz -C /opt/cprof
+RUN rm -rf profiler_java_agent.tar.gz
+
+WORKDIR /app
+COPY --from=builder /app .
+
+COPY elastic-apm-agent-1.47.1.jar /elastic-apm-agent-1.47.1.jar
+
+# COPY --from=docker.elastic.co/observability/apm-agent-java:1.47.1 /usr/agent/elastic-apm-agent.jar /elastic-apm-agent.jar
+
+EXPOSE 9555
+ENTRYPOINT ["/app/build/install/hipstershop/bin/AdService"]
+
+FROM without-grpc-health-probe-bin
+
+# renovate: datasource=github-releases depName=grpc-ecosystem/grpc-health-probe
+COPY grpc_health_probe-linux-amd64 /bin/grpc_health_probe
+RUN chmod +x /bin/grpc_health_probe

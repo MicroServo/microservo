@@ -1,0 +1,14 @@
+{
+  "all": true,
+  "prFilter": "label:need-backport",
+  "sourcePRLabels": [
+    "backported"
+  ],
+  "targetBranchChoices": [
+    "7.17"
+  ],
+  "targetPRLabels": [
+    "backport"
+  ],
+  "upstream": "elastic/helm-charts"
+}

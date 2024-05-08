@@ -1,0 +1,4 @@
+# Chart dependencies
+.idea
+.vscode
+.DS_Store

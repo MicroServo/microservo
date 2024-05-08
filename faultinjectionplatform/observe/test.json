@@ -1,0 +1,2446 @@
+{
+    "apiVersion": "v1",
+    "items": [
+        {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "metadata": {
+                "annotations": {
+                    "configChecksum": "46de515c6c1e8c2fdf63b5b7688f12678fccd174620b6c4c46508d8efe02c08"
+                },
+                "creationTimestamp": "2023-03-03T02:35:18Z",
+                "generateName": "apm-server-apm-server-775c97c969-",
+                "labels": {
+                    "app": "apm-server",
+                    "pod-template-hash": "775c97c969",
+                    "release": "apm-server"
+                },
+                "name": "apm-server-apm-server-775c97c969-7l2zk",
+                "namespace": "observe",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "apps/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "ReplicaSet",
+                        "name": "apm-server-apm-server-775c97c969",
+                        "uid": "4384a025-c20a-4f64-a97c-8e571ee24f90"
+                    }
+                ],
+                "resourceVersion": "180228",
+                "uid": "f37ef54f-0520-4b06-8eaf-d5df2040cdb1"
+            },
+            "spec": {
+                "containers": [
+                    {
+                        "env": [
+                            {
+                                "name": "ELASTICSEARCH_USERNAME",
+                                "valueFrom": {
+                                    "secretKeyRef": {
+                                        "key": "username",
+                                        "name": "elasticsearch-master-credentials"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "ELASTICSEARCH_PASSWORD",
+                                "valueFrom": {
+                                    "secretKeyRef": {
+                                        "key": "password",
+                                        "name": "elasticsearch-master-credentials"
+                                    }
+                                }
+                            }
+                        ],
+                        "image": "docker.elastic.co/apm/apm-server:8.7.1",
+                        "imagePullPolicy": "IfNotPresent",
+                        "livenessProbe": {
+                            "failureThreshold": 3,
+                            "httpGet": {
+                                "path": "/",
+                                "port": "http",
+                                "scheme": "HTTP"
+                            },
+                            "initialDelaySeconds": 30,
+                            "periodSeconds": 10,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 5
+                        },
+                        "name": "apm-server",
+                        "ports": [
+                            {
+                                "containerPort": 8200,
+                                "name": "http",
+                                "protocol": "TCP"
+                            }
+                        ],
+                        "readinessProbe": {
+                            "failureThreshold": 3,
+                            "httpGet": {
+                                "path": "/",
+                                "port": "http",
+                                "scheme": "HTTP"
+                            },
+                            "initialDelaySeconds": 30,
+                            "periodSeconds": 10,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 5
+                        },
+                        "resources": {
+                            "limits": {
+                                "cpu": "1",
+                                "memory": "512Mi"
+                            },
+                            "requests": {
+                                "cpu": "100m",
+                                "memory": "100Mi"
+                            }
+                        },
+                        "securityContext": {
+                            "privileged": false,
+                            "runAsGroup": 0,
+                            "runAsNonRoot": true,
+                            "runAsUser": 1000
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/usr/share/apm-server/apm-server.yml",
+                                "name": "apm-server-config",
+                                "readOnly": true,
+                                "subPath": "apm-server.yml"
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-4s47b",
+                                "readOnly": true
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "enableServiceLinks": true,
+                "nodeName": "minikube",
+                "preemptionPolicy": "PreemptLowerPriority",
+                "priority": 0,
+                "restartPolicy": "Always",
+                "schedulerName": "default-scheduler",
+                "securityContext": {
+                    "fsGroup": 1000,
+                    "runAsGroup": 0,
+                    "runAsUser": 1000
+                },
+                "serviceAccount": "apm-server-apm-server",
+                "serviceAccountName": "apm-server-apm-server",
+                "terminationGracePeriodSeconds": 30,
+                "tolerations": [
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/not-ready",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    },
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/unreachable",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    }
+                ],
+                "volumes": [
+                    {
+                        "configMap": {
+                            "defaultMode": 384,
+                            "name": "apm-server-apm-server-config"
+                        },
+                        "name": "apm-server-config"
+                    },
+                    {
+                        "name": "kube-api-access-4s47b",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "expirationSeconds": 3607,
+                                        "path": "token"
+                                    }
+                                },
+                                {
+                                    "configMap": {
+                                        "items": [
+                                            {
+                                                "key": "ca.crt",
+                                                "path": "ca.crt"
+                                            }
+                                        ],
+                                        "name": "kube-root-ca.crt"
+                                    }
+                                },
+                                {
+                                    "downwardAPI": {
+                                        "items": [
+                                            {
+                                                "fieldRef": {
+                                                    "apiVersion": "v1",
+                                                    "fieldPath": "metadata.namespace"
+                                                },
+                                                "path": "namespace"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2023-03-03T02:35:18Z",
+                        "status": "True",
+                        "type": "Initialized"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2023-03-03T02:35:58Z",
+                        "status": "True",
+                        "type": "Ready"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2023-03-03T02:35:58Z",
+                        "status": "True",
+                        "type": "ContainersReady"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2023-03-03T02:35:18Z",
+                        "status": "True",
+                        "type": "PodScheduled"
+                    }
+                ],
+                "containerStatuses": [
+                    {
+                        "containerID": "docker://21807ae092c24d055b118957d196a4f9c628e01d1c58751ea6a0519faa815b81",
+                        "image": "docker.elastic.co/apm/apm-server:8.7.1",
+                        "imageID": "docker://sha256:9c735787953f5e2e9f27c13a7d3ed555266103c4ea0db6a95a5d621ab48d3ed9",
+                        "lastState": {},
+                        "name": "apm-server",
+                        "ready": true,
+                        "restartCount": 0,
+                        "started": true,
+                        "state": {
+                            "running": {
+                                "startedAt": "2023-03-03T02:35:19Z"
+                            }
+                        }
+                    }
+                ],
+                "hostIP": "192.168.49.2",
+                "phase": "Running",
+                "podIP": "10.244.0.50",
+                "podIPs": [
+                    {
+                        "ip": "10.244.0.50"
+                    }
+                ],
+                "qosClass": "Burstable",
+                "startTime": "2023-03-03T02:35:18Z"
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "metadata": {
+                "creationTimestamp": "2023-03-03T02:33:53Z",
+                "generateName": "elasticsearch-master-",
+                "labels": {
+                    "app": "elasticsearch-master",
+                    "chart": "elasticsearch",
+                    "controller-revision-hash": "elasticsearch-master-58dc66896b",
+                    "release": "elasticsearch",
+                    "statefulset.kubernetes.io/pod-name": "elasticsearch-master-0"
+                },
+                "name": "elasticsearch-master-0",
+                "namespace": "observe",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "apps/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "StatefulSet",
+                        "name": "elasticsearch-master",
+                        "uid": "640edec9-02fa-45d4-b828-df2f885edd10"
+                    }
+                ],
+                "resourceVersion": "180039",
+                "uid": "98704639-1f3e-402e-a060-d1b0cb2b3a89"
+            },
+            "spec": {
+                "affinity": {
+                    "podAntiAffinity": {
+                        "preferredDuringSchedulingIgnoredDuringExecution": [
+                            {
+                                "podAffinityTerm": {
+                                    "labelSelector": {
+                                        "matchExpressions": [
+                                            {
+                                                "key": "app",
+                                                "operator": "In",
+                                                "values": [
+                                                    "elasticsearch-master"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    "topologyKey": "kubernetes.io/hostname"
+                                },
+                                "weight": 1
+                            }
+                        ]
+                    }
+                },
+                "automountServiceAccountToken": true,
+                "containers": [
+                    {
+                        "env": [
+                            {
+                                "name": "node.name",
+                                "valueFrom": {
+                                    "fieldRef": {
+                                        "apiVersion": "v1",
+                                        "fieldPath": "metadata.name"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "cluster.initial_master_nodes",
+                                "value": "elasticsearch-master-0,"
+                            },
+                            {
+                                "name": "node.roles",
+                                "value": "master,data,data_content,data_hot,data_warm,data_cold,ingest,ml,remote_cluster_client,transform,"
+                            },
+                            {
+                                "name": "discovery.seed_hosts",
+                                "value": "elasticsearch-master-headless"
+                            },
+                            {
+                                "name": "cluster.name",
+                                "value": "elasticsearch"
+                            },
+                            {
+                                "name": "network.host",
+                                "value": "0.0.0.0"
+                            },
+                            {
+                                "name": "ELASTIC_PASSWORD",
+                                "valueFrom": {
+                                    "secretKeyRef": {
+                                        "key": "password",
+                                        "name": "elasticsearch-master-credentials"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "ES_JAVA_OPTS",
+                                "value": "-Xmx512m -Xms512m"
+                            },
+                            {
+                                "name": "xpack.security.enabled",
+                                "value": "true"
+                            },
+                            {
+                                "name": "xpack.security.transport.ssl.enabled",
+                                "value": "true"
+                            },
+                            {
+                                "name": "xpack.security.http.ssl.enabled",
+                                "value": "true"
+                            },
+                            {
+                                "name": "xpack.security.transport.ssl.verification_mode",
+                                "value": "certificate"
+                            },
+                            {
+                                "name": "xpack.security.transport.ssl.key",
+                                "value": "/usr/share/elasticsearch/config/certs/tls.key"
+                            },
+                            {
+                                "name": "xpack.security.transport.ssl.certificate",
+                                "value": "/usr/share/elasticsearch/config/certs/tls.crt"
+                            },
+                            {
+                                "name": "xpack.security.transport.ssl.certificate_authorities",
+                                "value": "/usr/share/elasticsearch/config/certs/ca.crt"
+                            },
+                            {
+                                "name": "xpack.security.http.ssl.key",
+                                "value": "/usr/share/elasticsearch/config/certs/tls.key"
+                            },
+                            {
+                                "name": "xpack.security.http.ssl.certificate",
+                                "value": "/usr/share/elasticsearch/config/certs/tls.crt"
+                            },
+                            {
+                                "name": "xpack.security.http.ssl.certificate_authorities",
+                                "value": "/usr/share/elasticsearch/config/certs/ca.crt"
+                            }
+                        ],
+                        "image": "docker.elastic.co/elasticsearch/elasticsearch:8.7.1",
+                        "imagePullPolicy": "IfNotPresent",
+                        "name": "elasticsearch",
+                        "ports": [
+                            {
+                                "containerPort": 9200,
+                                "name": "http",
+                                "protocol": "TCP"
+                            },
+                            {
+                                "containerPort": 9300,
+                                "name": "transport",
+                                "protocol": "TCP"
+                            }
+                        ],
+                        "readinessProbe": {
+                            "exec": {
+                                "command": [
+                                    "bash",
+                                    "-c",
+                                    "set -e\n\n# Exit if ELASTIC_PASSWORD in unset\nif [ -z \"${ELASTIC_PASSWORD}\" ]; then\n  echo \"ELASTIC_PASSWORD variable is missing, exiting\"\n  exit 1\nfi\n\n# If the node is starting up wait for the cluster to be ready (request params: \"wait_for_status=green\u0026timeout=1s\" )\n# Once it has started only check that the node itself is responding\nSTART_FILE=/tmp/.es_start_file\n\n# Disable nss cache to avoid filling dentry cache when calling curl\n# This is required with Elasticsearch Docker using nss \u003c 3.52\nexport NSS_SDB_USE_CACHE=no\n\nhttp () {\n  local path=\"${1}\"\n  local args=\"${2}\"\n  set -- -XGET -s\n\n  if [ \"$args\" != \"\" ]; then\n    set -- \"$@\" $args\n  fi\n\n  set -- \"$@\" -u \"elastic:${ELASTIC_PASSWORD}\"\n\n  curl --output /dev/null -k \"$@\" \"https://127.0.0.1:9200${path}\"\n}\n\nif [ -f \"${START_FILE}\" ]; then\n  echo 'Elasticsearch is already running, lets check the node is healthy'\n  HTTP_CODE=$(http \"/\" \"-w %{http_code}\")\n  RC=$?\n  if [[ ${RC} -ne 0 ]]; then\n    echo \"curl --output /dev/null -k -XGET -s -w '%{http_code}' \\${BASIC_AUTH} https://127.0.0.1:9200/ failed with RC ${RC}\"\n    exit ${RC}\n  fi\n  # ready if HTTP code 200, 503 is tolerable if ES version is 6.x\n  if [[ ${HTTP_CODE} == \"200\" ]]; then\n    exit 0\n  elif [[ ${HTTP_CODE} == \"503\" \u0026\u0026 \"8\" == \"6\" ]]; then\n    exit 0\n  else\n    echo \"curl --output /dev/null -k -XGET -s -w '%{http_code}' \\${BASIC_AUTH} https://127.0.0.1:9200/ failed with HTTP code ${HTTP_CODE}\"\n    exit 1\n  fi\n\nelse\n  echo 'Waiting for elasticsearch cluster to become ready (request params: \"wait_for_status=green\u0026timeout=1s\" )'\n  if http \"/_cluster/health?wait_for_status=green\u0026timeout=1s\" \"--fail\" ; then\n    touch ${START_FILE}\n    exit 0\n  else\n    echo 'Cluster is not yet ready (request params: \"wait_for_status=green\u0026timeout=1s\" )'\n    exit 1\n  fi\nfi\n"
+                                ]
+                            },
+                            "failureThreshold": 3,
+                            "initialDelaySeconds": 10,
+                            "periodSeconds": 10,
+                            "successThreshold": 3,
+                            "timeoutSeconds": 5
+                        },
+                        "resources": {
+                            "limits": {
+                                "cpu": "1",
+                                "memory": "1024M"
+                            },
+                            "requests": {
+                                "cpu": "100m",
+                                "memory": "1024M"
+                            }
+                        },
+                        "securityContext": {
+                            "capabilities": {
+                                "drop": [
+                                    "ALL"
+                                ]
+                            },
+                            "runAsNonRoot": true,
+                            "runAsUser": 1000
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/usr/share/elasticsearch/data",
+                                "name": "elasticsearch-master"
+                            },
+                            {
+                                "mountPath": "/usr/share/elasticsearch/config/certs",
+                                "name": "elasticsearch-certs",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-2x994",
+                                "readOnly": true
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "enableServiceLinks": true,
+                "hostname": "elasticsearch-master-0",
+                "initContainers": [
+                    {
+                        "command": [
+                            "sysctl",
+                            "-w",
+                            "vm.max_map_count=262144"
+                        ],
+                        "image": "docker.elastic.co/elasticsearch/elasticsearch:8.7.1",
+                        "imagePullPolicy": "IfNotPresent",
+                        "name": "configure-sysctl",
+                        "resources": {},
+                        "securityContext": {
+                            "privileged": true,
+                            "runAsUser": 0
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-2x994",
+                                "readOnly": true
+                            }
+                        ]
+                    }
+                ],
+                "nodeName": "minikube",
+                "preemptionPolicy": "PreemptLowerPriority",
+                "priority": 0,
+                "restartPolicy": "Always",
+                "schedulerName": "default-scheduler",
+                "securityContext": {
+                    "fsGroup": 1000,
+                    "runAsUser": 1000
+                },
+                "serviceAccount": "default",
+                "serviceAccountName": "default",
+                "subdomain": "elasticsearch-master-headless",
+                "terminationGracePeriodSeconds": 120,
+                "tolerations": [
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/not-ready",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    },
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/unreachable",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    }
+                ],
+                "volumes": [
+                    {
+                        "name": "elasticsearch-master",
+                        "persistentVolumeClaim": {
+                            "claimName": "elasticsearch-master-elasticsearch-master-0"
+                        }
+                    },
+                    {
+                        "name": "elasticsearch-certs",
+                        "secret": {
+                            "defaultMode": 420,
+                            "secretName": "elasticsearch-master-certs"
+                        }
+                    },
+                    {
+                        "name": "kube-api-access-2x994",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "expirationSeconds": 3607,
+                                        "path": "token"
+                                    }
+                                },
+                                {
+                                    "configMap": {
+                                        "items": [
+                                            {
+                                                "key": "ca.crt",
+                                                "path": "ca.crt"
+                                            }
+                                        ],
+                                        "name": "kube-root-ca.crt"
+                                    }
+                                },
+                                {
+                                    "downwardAPI": {
+                                        "items": [
+                                            {
+                                                "fieldRef": {
+                                                    "apiVersion": "v1",
+                                                    "fieldPath": "metadata.namespace"
+                                                },
+                                                "path": "namespace"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2023-03-03T02:33:55Z",
+                        "status": "True",
+                        "type": "Initialized"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2023-03-03T02:35:15Z",
+                        "status": "True",
+                        "type": "Ready"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2023-03-03T02:35:15Z",
+                        "status": "True",
+                        "type": "ContainersReady"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2023-03-03T02:33:54Z",
+                        "status": "True",
+                        "type": "PodScheduled"
+                    }
+                ],
+                "containerStatuses": [
+                    {
+                        "containerID": "docker://f61ac79ee7808f8cd6e0a26c4266f85b0ea1eea63c4567a67c9f511553181f4c",
+                        "image": "docker.elastic.co/elasticsearch/elasticsearch:8.7.1",
+                        "imageID": "docker://sha256:9d4620cd27bd0baf642c43f315363cc605c83d2f685b0a81842ee8e748730825",
+                        "lastState": {},
+                        "name": "elasticsearch",
+                        "ready": true,
+                        "restartCount": 0,
+                        "started": true,
+                        "state": {
+                            "running": {
+                                "startedAt": "2023-03-03T02:33:56Z"
+                            }
+                        }
+                    }
+                ],
+                "hostIP": "192.168.49.2",
+                "initContainerStatuses": [
+                    {
+                        "containerID": "docker://1dd33d273934c776ad5c8e05f167c0b4b2dcad187d3250f0eadc3dae57c5a685",
+                        "image": "docker.elastic.co/elasticsearch/elasticsearch:8.7.1",
+                        "imageID": "docker://sha256:9d4620cd27bd0baf642c43f315363cc605c83d2f685b0a81842ee8e748730825",
+                        "lastState": {},
+                        "name": "configure-sysctl",
+                        "ready": true,
+                        "restartCount": 0,
+                        "state": {
+                            "terminated": {
+                                "containerID": "docker://1dd33d273934c776ad5c8e05f167c0b4b2dcad187d3250f0eadc3dae57c5a685",
+                                "exitCode": 0,
+                                "finishedAt": "2023-03-03T02:33:55Z",
+                                "reason": "Completed",
+                                "startedAt": "2023-03-03T02:33:55Z"
+                            }
+                        }
+                    }
+                ],
+                "phase": "Running",
+                "podIP": "10.244.0.49",
+                "podIPs": [
+                    {
+                        "ip": "10.244.0.49"
+                    }
+                ],
+                "qosClass": "Burstable",
+                "startTime": "2023-03-03T02:33:54Z"
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "metadata": {
+                "annotations": {
+                    "configChecksum": "ed15974938d29a3e7cc45d4945f0aee0154f8c118b22cbced304513ad902356"
+                },
+                "creationTimestamp": "2023-03-03T02:35:25Z",
+                "generateName": "filebeat-filebeat-",
+                "labels": {
+                    "app": "filebeat-filebeat",
+                    "chart": "filebeat-8.7.1",
+                    "controller-revision-hash": "59d5dd4d87",
+                    "heritage": "Helm",
+                    "pod-template-generation": "1",
+                    "release": "filebeat"
+                },
+                "name": "filebeat-filebeat-k85rp",
+                "namespace": "observe",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "apps/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "DaemonSet",
+                        "name": "filebeat-filebeat",
+                        "uid": "353804aa-7ede-4a94-bac9-e3fc1da2b97c"
+                    }
+                ],
+                "resourceVersion": "180216",
+                "uid": "add99c55-3afe-4c0e-904a-a327b51b6051"
+            },
+            "spec": {
+                "affinity": {
+                    "nodeAffinity": {
+                        "requiredDuringSchedulingIgnoredDuringExecution": {
+                            "nodeSelectorTerms": [
+                                {
+                                    "matchFields": [
+                                        {
+                                            "key": "metadata.name",
+                                            "operator": "In",
+                                            "values": [
+                                                "minikube"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                },
+                "containers": [
+                    {
+                        "args": [
+                            "-e",
+                            "-E",
+                            "http.enabled=true"
+                        ],
+                        "env": [
+                            {
+                                "name": "POD_NAMESPACE",
+                                "valueFrom": {
+                                    "fieldRef": {
+                                        "apiVersion": "v1",
+                                        "fieldPath": "metadata.namespace"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "NODE_NAME",
+                                "valueFrom": {
+                                    "fieldRef": {
+                                        "apiVersion": "v1",
+                                        "fieldPath": "spec.nodeName"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "ELASTICSEARCH_USERNAME",
+                                "valueFrom": {
+                                    "secretKeyRef": {
+                                        "key": "username",
+                                        "name": "elasticsearch-master-credentials"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "ELASTICSEARCH_PASSWORD",
+                                "valueFrom": {
+                                    "secretKeyRef": {
+                                        "key": "password",
+                                        "name": "elasticsearch-master-credentials"
+                                    }
+                                }
+                            }
+                        ],
+                        "image": "docker.elastic.co/beats/filebeat:8.7.1",
+                        "imagePullPolicy": "IfNotPresent",
+                        "livenessProbe": {
+                            "exec": {
+                                "command": [
+                                    "sh",
+                                    "-c",
+                                    "#!/usr/bin/env bash -e\ncurl --fail 127.0.0.1:5066\n"
+                                ]
+                            },
+                            "failureThreshold": 3,
+                            "initialDelaySeconds": 10,
+                            "periodSeconds": 10,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 5
+                        },
+                        "name": "filebeat",
+                        "readinessProbe": {
+                            "exec": {
+                                "command": [
+                                    "sh",
+                                    "-c",
+                                    "#!/usr/bin/env bash -e\nfilebeat test output\n"
+                                ]
+                            },
+                            "failureThreshold": 3,
+                            "initialDelaySeconds": 10,
+                            "periodSeconds": 10,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 5
+                        },
+                        "resources": {
+                            "limits": {
+                                "cpu": "1",
+                                "memory": "200Mi"
+                            },
+                            "requests": {
+                                "cpu": "100m",
+                                "memory": "100Mi"
+                            }
+                        },
+                        "securityContext": {
+                            "privileged": false,
+                            "runAsUser": 0
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/usr/share/filebeat/certs/",
+                                "name": "elasticsearch-master-certs"
+                            },
+                            {
+                                "mountPath": "/usr/share/filebeat/filebeat.yml",
+                                "name": "filebeat-config",
+                                "readOnly": true,
+                                "subPath": "filebeat.yml"
+                            },
+                            {
+                                "mountPath": "/usr/share/filebeat/data",
+                                "name": "data"
+                            },
+                            {
+                                "mountPath": "/var/lib/docker/containers",
+                                "name": "varlibdockercontainers",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/var/log",
+                                "name": "varlog",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/var/run/docker.sock",
+                                "name": "varrundockersock",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-dz7nr",
+                                "readOnly": true
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "enableServiceLinks": true,
+                "nodeName": "minikube",
+                "preemptionPolicy": "PreemptLowerPriority",
+                "priority": 0,
+                "restartPolicy": "Always",
+                "schedulerName": "default-scheduler",
+                "securityContext": {},
+                "serviceAccount": "filebeat-filebeat",
+                "serviceAccountName": "filebeat-filebeat",
+                "terminationGracePeriodSeconds": 30,
+                "tolerations": [
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/not-ready",
+                        "operator": "Exists"
+                    },
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/unreachable",
+                        "operator": "Exists"
+                    },
+                    {
+                        "effect": "NoSchedule",
+                        "key": "node.kubernetes.io/disk-pressure",
+                        "operator": "Exists"
+                    },
+                    {
+                        "effect": "NoSchedule",
+                        "key": "node.kubernetes.io/memory-pressure",
+                        "operator": "Exists"
+                    },
+                    {
+                        "effect": "NoSchedule",
+                        "key": "node.kubernetes.io/pid-pressure",
+                        "operator": "Exists"
+                    },
+                    {
+                        "effect": "NoSchedule",
+                        "key": "node.kubernetes.io/unschedulable",
+                        "operator": "Exists"
+                    }
+                ],
+                "volumes": [
+                    {
+                        "name": "elasticsearch-master-certs",
+                        "secret": {
+                            "defaultMode": 420,
+                            "secretName": "elasticsearch-master-certs"
+                        }
+                    },
+                    {
+                        "configMap": {
+                            "defaultMode": 384,
+                            "name": "filebeat-filebeat-daemonset-config"
+                        },
+                        "name": "filebeat-config"
+                    },
+                    {
+                        "hostPath": {
+                            "path": "/var/lib/filebeat-filebeat-observe-data",
+                            "type": "DirectoryOrCreate"
+                        },
+                        "name": "data"
+                    },
+                    {
+                        "hostPath": {
+                            "path": "/var/lib/docker/containers",
+                            "type": ""
+                        },
+                        "name": "varlibdockercontainers"
+                    },
+                    {
+                        "hostPath": {
+                            "path": "/var/log",
+                            "type": ""
+                        },
+                        "name": "varlog"
+                    },
+                    {
+                        "hostPath": {
+                            "path": "/var/run/docker.sock",
+                            "type": ""
+                        },
+                        "name": "varrundockersock"
+                    },
+                    {
+                        "name": "kube-api-access-dz7nr",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "expirationSeconds": 3607,
+                                        "path": "token"
+                                    }
+                                },
+                                {
+                                    "configMap": {
+                                        "items": [
+                                            {
+                                                "key": "ca.crt",
+                                                "path": "ca.crt"
+                                            }
+                                        ],
+                                        "name": "kube-root-ca.crt"
+                                    }
+                                },
+                                {
+                                    "downwardAPI": {
+                                        "items": [
+                                            {
+                                                "fieldRef": {
+                                                    "apiVersion": "v1",
+                                                    "fieldPath": "metadata.namespace"
+                                                },
+                                                "path": "namespace"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2023-03-03T02:35:25Z",
+                        "status": "True",
+                        "type": "Initialized"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2023-03-03T02:35:47Z",
+                        "status": "True",
+                        "type": "Ready"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2023-03-03T02:35:47Z",
+                        "status": "True",
+                        "type": "ContainersReady"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2023-03-03T02:35:25Z",
+                        "status": "True",
+                        "type": "PodScheduled"
+                    }
+                ],
+                "containerStatuses": [
+                    {
+                        "containerID": "docker://a16ef8e68904c7905ff5a26cf658f76f9d1b0b82b04a4ad5366a3b8440eea387",
+                        "image": "docker.elastic.co/beats/filebeat:8.7.1",
+                        "imageID": "docker://sha256:17d2f888f81f337b24fbcd017cfade77a7ccee1bc9ade2d5494ed3e5a7a91127",
+                        "lastState": {},
+                        "name": "filebeat",
+                        "ready": true,
+                        "restartCount": 0,
+                        "started": true,
+                        "state": {
+                            "running": {
+                                "startedAt": "2023-03-03T02:35:27Z"
+                            }
+                        }
+                    }
+                ],
+                "hostIP": "192.168.49.2",
+                "phase": "Running",
+                "podIP": "10.244.0.53",
+                "podIPs": [
+                    {
+                        "ip": "10.244.0.53"
+                    }
+                ],
+                "qosClass": "Burstable",
+                "startTime": "2023-03-03T02:35:25Z"
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "metadata": {
+                "creationTimestamp": "2023-03-03T02:35:25Z",
+                "generateName": "kibana-kibana-749869bc5c-",
+                "labels": {
+                    "app": "kibana",
+                    "pod-template-hash": "749869bc5c",
+                    "release": "kibana"
+                },
+                "name": "kibana-kibana-749869bc5c-mqgft",
+                "namespace": "observe",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "apps/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "ReplicaSet",
+                        "name": "kibana-kibana-749869bc5c",
+                        "uid": "e74c5fd8-0ae1-41dc-926c-a085a1e867a2"
+                    }
+                ],
+                "resourceVersion": "180263",
+                "uid": "653b4f2c-257d-46c6-9cc2-c131d3ef9978"
+            },
+            "spec": {
+                "automountServiceAccountToken": true,
+                "containers": [
+                    {
+                        "env": [
+                            {
+                                "name": "ELASTICSEARCH_HOSTS",
+                                "value": "https://elasticsearch-master:9200"
+                            },
+                            {
+                                "name": "ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES",
+                                "value": "/usr/share/kibana/config/certs/ca.crt"
+                            },
+                            {
+                                "name": "SERVER_HOST",
+                                "value": "0.0.0.0"
+                            },
+                            {
+                                "name": "ELASTICSEARCH_SERVICEACCOUNTTOKEN",
+                                "valueFrom": {
+                                    "secretKeyRef": {
+                                        "key": "token",
+                                        "name": "kibana-kibana-es-token",
+                                        "optional": false
+                                    }
+                                }
+                            },
+                            {
+                                "name": "NODE_OPTIONS",
+                                "value": "--max-old-space-size=1800"
+                            }
+                        ],
+                        "image": "docker.elastic.co/kibana/kibana:8.7.1",
+                        "imagePullPolicy": "IfNotPresent",
+                        "name": "kibana",
+                        "ports": [
+                            {
+                                "containerPort": 5601,
+                                "protocol": "TCP"
+                            }
+                        ],
+                        "readinessProbe": {
+                            "exec": {
+                                "command": [
+                                    "bash",
+                                    "-c",
+                                    "#!/usr/bin/env bash -e\n\n# Disable nss cache to avoid filling dentry cache when calling curl\n# This is required with Kibana Docker using nss \u003c 3.52\nexport NSS_SDB_USE_CACHE=no\n\nhttp () {\n    local path=\"${1}\"\n    set -- -XGET -s --fail -L\n\n    if [ -n \"${ELASTICSEARCH_USERNAME}\" ] \u0026\u0026 [ -n \"${ELASTICSEARCH_PASSWORD}\" ]; then\n      set -- \"$@\" -u \"${ELASTICSEARCH_USERNAME}:${ELASTICSEARCH_PASSWORD}\"\n    fi\n\n    STATUS=$(curl --output /dev/null --write-out \"%{http_code}\" -k \"$@\" \"http://localhost:5601${path}\")\n    if [[ \"${STATUS}\" -eq 200 ]]; then\n      exit 0\n    fi\n\n    echo \"Error: Got HTTP code ${STATUS} but expected a 200\"\n    exit 1\n}\n\nhttp \"/app/kibana\"\n"
+                                ]
+                            },
+                            "failureThreshold": 3,
+                            "initialDelaySeconds": 10,
+                            "periodSeconds": 10,
+                            "successThreshold": 3,
+                            "timeoutSeconds": 5
+                        },
+                        "resources": {
+                            "limits": {
+                                "cpu": "1",
+                                "memory": "2Gi"
+                            },
+                            "requests": {
+                                "cpu": "1",
+                                "memory": "2Gi"
+                            }
+                        },
+                        "securityContext": {
+                            "capabilities": {
+                                "drop": [
+                                    "ALL"
+                                ]
+                            },
+                            "runAsNonRoot": true,
+                            "runAsUser": 1000
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/usr/share/kibana/config/certs",
+                                "name": "elasticsearch-certs",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/usr/share/kibana/config/tokens",
+                                "name": "kibana-tokens",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-c685b",
+                                "readOnly": true
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "enableServiceLinks": true,
+                "nodeName": "minikube",
+                "preemptionPolicy": "PreemptLowerPriority",
+                "priority": 0,
+                "restartPolicy": "Always",
+                "schedulerName": "default-scheduler",
+                "securityContext": {
+                    "fsGroup": 1000
+                },
+                "serviceAccount": "default",
+                "serviceAccountName": "default",
+                "terminationGracePeriodSeconds": 30,
+                "tolerations": [
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/not-ready",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    },
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/unreachable",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    }
+                ],
+                "volumes": [
+                    {
+                        "emptyDir": {},
+                        "name": "kibana-tokens"
+                    },
+                    {
+                        "name": "elasticsearch-certs",
+                        "secret": {
+                            "defaultMode": 420,
+                            "secretName": "elasticsearch-master-certs"
+                        }
+                    },
+                    {
+                        "name": "kube-api-access-c685b",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "expirationSeconds": 3607,
+                                        "path": "token"
+                                    }
+                                },
+                                {
+                                    "configMap": {
+                                        "items": [
+                                            {
+                                                "key": "ca.crt",
+                                                "path": "ca.crt"
+                                            }
+                                        ],
+                                        "name": "kube-root-ca.crt"
+                                    }
+                                },
+                                {
+                                    "downwardAPI": {
+                                        "items": [
+                                            {
+                                                "fieldRef": {
+                                                    "apiVersion": "v1",
+                                                    "fieldPath": "metadata.namespace"
+                                                },
+                                                "path": "namespace"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2023-03-03T02:35:25Z",
+                        "status": "True",
+                        "type": "Initialized"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2023-03-03T02:36:35Z",
+                        "status": "True",
+                        "type": "Ready"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2023-03-03T02:36:35Z",
+                        "status": "True",
+                        "type": "ContainersReady"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2023-03-03T02:35:25Z",
+                        "status": "True",
+                        "type": "PodScheduled"
+                    }
+                ],
+                "containerStatuses": [
+                    {
+                        "containerID": "docker://0485f41d132389181e4cfa954c5ab221029c9241e40f1895e53c9059bce61b67",
+                        "image": "docker.elastic.co/kibana/kibana:8.7.1",
+                        "imageID": "docker://sha256:1a5dbfe4bf27f49e2717a021e936de38db6c89b7e154aeecc99979fcef2f5aa5",
+                        "lastState": {},
+                        "name": "kibana",
+                        "ready": true,
+                        "restartCount": 0,
+                        "started": true,
+                        "state": {
+                            "running": {
+                                "startedAt": "2023-03-03T02:35:26Z"
+                            }
+                        }
+                    }
+                ],
+                "hostIP": "192.168.49.2",
+                "phase": "Running",
+                "podIP": "10.244.0.52",
+                "podIPs": [
+                    {
+                        "ip": "10.244.0.52"
+                    }
+                ],
+                "qosClass": "Guaranteed",
+                "startTime": "2023-03-03T02:35:25Z"
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "metadata": {
+                "annotations": {
+                    "configchecksum": "216fdbe350c3135674d958557c97f403d1cb72da7e4d4117a6bc884932f6455",
+                    "pipelinechecksum": "22d31dc4c924a41129b80e10363138c1d68d9ec5d0e625636dc101359cbd515"
+                },
+                "creationTimestamp": "2023-03-03T02:35:26Z",
+                "generateName": "logstash-logstash-",
+                "labels": {
+                    "app": "logstash-logstash",
+                    "chart": "logstash",
+                    "controller-revision-hash": "logstash-logstash-6cb57f88c6",
+                    "heritage": "Helm",
+                    "release": "logstash",
+                    "statefulset.kubernetes.io/pod-name": "logstash-logstash-0"
+                },
+                "name": "logstash-logstash-0",
+                "namespace": "observe",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "apps/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "StatefulSet",
+                        "name": "logstash-logstash",
+                        "uid": "92a6cc9a-14cd-4c6d-999d-df7b6adacf17"
+                    }
+                ],
+                "resourceVersion": "180283",
+                "uid": "9aa708f5-0dff-4e73-ab33-e3c3562bd6f7"
+            },
+            "spec": {
+                "affinity": {
+                    "podAntiAffinity": {
+                        "requiredDuringSchedulingIgnoredDuringExecution": [
+                            {
+                                "labelSelector": {
+                                    "matchExpressions": [
+                                        {
+                                            "key": "app",
+                                            "operator": "In",
+                                            "values": [
+                                                "logstash-logstash"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "topologyKey": "kubernetes.io/hostname"
+                            }
+                        ]
+                    }
+                },
+                "containers": [
+                    {
+                        "env": [
+                            {
+                                "name": "LS_JAVA_OPTS",
+                                "value": "-Xmx1g -Xms1g"
+                            },
+                            {
+                                "name": "ELASTICSEARCH_USERNAME",
+                                "valueFrom": {
+                                    "secretKeyRef": {
+                                        "key": "username",
+                                        "name": "elasticsearch-master-credentials"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "ELASTICSEARCH_PASSWORD",
+                                "valueFrom": {
+                                    "secretKeyRef": {
+                                        "key": "password",
+                                        "name": "elasticsearch-master-credentials"
+                                    }
+                                }
+                            }
+                        ],
+                        "image": "docker.elastic.co/logstash/logstash:8.7.1",
+                        "imagePullPolicy": "IfNotPresent",
+                        "livenessProbe": {
+                            "failureThreshold": 3,
+                            "httpGet": {
+                                "path": "/",
+                                "port": "http",
+                                "scheme": "HTTP"
+                            },
+                            "initialDelaySeconds": 300,
+                            "periodSeconds": 10,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 5
+                        },
+                        "name": "logstash",
+                        "ports": [
+                            {
+                                "containerPort": 9600,
+                                "name": "http",
+                                "protocol": "TCP"
+                            }
+                        ],
+                        "readinessProbe": {
+                            "failureThreshold": 3,
+                            "httpGet": {
+                                "path": "/",
+                                "port": "http",
+                                "scheme": "HTTP"
+                            },
+                            "initialDelaySeconds": 60,
+                            "periodSeconds": 10,
+                            "successThreshold": 3,
+                            "timeoutSeconds": 5
+                        },
+                        "resources": {
+                            "limits": {
+                                "cpu": "1",
+                                "memory": "1536Mi"
+                            },
+                            "requests": {
+                                "cpu": "100m",
+                                "memory": "1536Mi"
+                            }
+                        },
+                        "securityContext": {
+                            "capabilities": {
+                                "drop": [
+                                    "ALL"
+                                ]
+                            },
+                            "runAsNonRoot": true,
+                            "runAsUser": 1000
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/usr/share/logstash/data",
+                                "name": "logstash-logstash"
+                            },
+                            {
+                                "mountPath": "/usr/share/logstash/config/certs",
+                                "name": "elasticsearch-master-certs"
+                            },
+                            {
+                                "mountPath": "/usr/share/logstash/config/logstash.yml",
+                                "name": "logstashconfig",
+                                "subPath": "logstash.yml"
+                            },
+                            {
+                                "mountPath": "/usr/share/logstash/pipeline/uptime.conf",
+                                "name": "logstashpipeline",
+                                "subPath": "uptime.conf"
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-z4ms4",
+                                "readOnly": true
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "enableServiceLinks": true,
+                "hostname": "logstash-logstash-0",
+                "nodeName": "minikube",
+                "preemptionPolicy": "PreemptLowerPriority",
+                "priority": 0,
+                "restartPolicy": "Always",
+                "schedulerName": "default-scheduler",
+                "securityContext": {
+                    "fsGroup": 1000,
+                    "runAsUser": 1000
+                },
+                "serviceAccount": "default",
+                "serviceAccountName": "default",
+                "subdomain": "logstash-logstash-headless",
+                "terminationGracePeriodSeconds": 120,
+                "tolerations": [
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/not-ready",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    },
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/unreachable",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    }
+                ],
+                "volumes": [
+                    {
+                        "name": "logstash-logstash",
+                        "persistentVolumeClaim": {
+                            "claimName": "logstash-logstash-logstash-logstash-0"
+                        }
+                    },
+                    {
+                        "name": "elasticsearch-master-certs",
+                        "secret": {
+                            "defaultMode": 420,
+                            "secretName": "elasticsearch-master-certs"
+                        }
+                    },
+                    {
+                        "configMap": {
+                            "defaultMode": 420,
+                            "name": "logstash-logstash-config"
+                        },
+                        "name": "logstashconfig"
+                    },
+                    {
+                        "configMap": {
+                            "defaultMode": 420,
+                            "name": "logstash-logstash-pipeline"
+                        },
+                        "name": "logstashpipeline"
+                    },
+                    {
+                        "name": "kube-api-access-z4ms4",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "expirationSeconds": 3607,
+                                        "path": "token"
+                                    }
+                                },
+                                {
+                                    "configMap": {
+                                        "items": [
+                                            {
+                                                "key": "ca.crt",
+                                                "path": "ca.crt"
+                                            }
+                                        ],
+                                        "name": "kube-root-ca.crt"
+                                    }
+                                },
+                                {
+                                    "downwardAPI": {
+                                        "items": [
+                                            {
+                                                "fieldRef": {
+                                                    "apiVersion": "v1",
+                                                    "fieldPath": "metadata.namespace"
+                                                },
+                                                "path": "namespace"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2023-03-03T02:35:28Z",
+                        "status": "True",
+                        "type": "Initialized"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2023-03-03T02:36:54Z",
+                        "status": "True",
+                        "type": "Ready"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2023-03-03T02:36:54Z",
+                        "status": "True",
+                        "type": "ContainersReady"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2023-03-03T02:35:28Z",
+                        "status": "True",
+                        "type": "PodScheduled"
+                    }
+                ],
+                "containerStatuses": [
+                    {
+                        "containerID": "docker://49df9cad64c2fa0e0ac2de3422edfe9f1a165bb5d617c180961e5a3d02d6b7c2",
+                        "image": "docker.elastic.co/logstash/logstash:8.7.1",
+                        "imageID": "docker://sha256:db6effbaf70b80bf3c9a80a972413720c5e9c285b8ecaf37cb88a9362835f0fd",
+                        "lastState": {},
+                        "name": "logstash",
+                        "ready": true,
+                        "restartCount": 0,
+                        "started": true,
+                        "state": {
+                            "running": {
+                                "startedAt": "2023-03-03T02:35:29Z"
+                            }
+                        }
+                    }
+                ],
+                "hostIP": "192.168.49.2",
+                "phase": "Running",
+                "podIP": "10.244.0.54",
+                "podIPs": [
+                    {
+                        "ip": "10.244.0.54"
+                    }
+                ],
+                "qosClass": "Burstable",
+                "startTime": "2023-03-03T02:35:28Z"
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "metadata": {
+                "creationTimestamp": "2023-03-03T07:12:55Z",
+                "generateName": "metricbeat-kube-state-metrics-5d7cfbbcc-",
+                "labels": {
+                    "app.kubernetes.io/component": "metrics",
+                    "app.kubernetes.io/instance": "metricbeat",
+                    "app.kubernetes.io/managed-by": "Helm",
+                    "app.kubernetes.io/name": "kube-state-metrics",
+                    "app.kubernetes.io/part-of": "kube-state-metrics",
+                    "app.kubernetes.io/version": "2.4.1",
+                    "helm.sh/chart": "kube-state-metrics-4.7.0",
+                    "pod-template-hash": "5d7cfbbcc"
+                },
+                "name": "metricbeat-kube-state-metrics-5d7cfbbcc-bppz7",
+                "namespace": "observe",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "apps/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "ReplicaSet",
+                        "name": "metricbeat-kube-state-metrics-5d7cfbbcc",
+                        "uid": "9d661e57-4cdf-40ae-8396-66767a3c171a"
+                    }
+                ],
+                "resourceVersion": "195575",
+                "uid": "a5386de3-6312-40e3-b594-1e809e43cb4a"
+            },
+            "spec": {
+                "containers": [
+                    {
+                        "args": [
+                            "--port=8080",
+                            "--resources=certificatesigningrequests,configmaps,cronjobs,daemonsets,deployments,endpoints,horizontalpodautoscalers,ingresses,jobs,limitranges,mutatingwebhookconfigurations,namespaces,networkpolicies,nodes,persistentvolumeclaims,persistentvolumes,poddisruptionbudgets,pods,replicasets,replicationcontrollers,resourcequotas,secrets,services,statefulsets,storageclasses,validatingwebhookconfigurations,volumeattachments",
+                            "--telemetry-port=8081"
+                        ],
+                        "image": "k8s.gcr.io/kube-state-metrics/kube-state-metrics:v2.4.1",
+                        "imagePullPolicy": "IfNotPresent",
+                        "livenessProbe": {
+                            "failureThreshold": 3,
+                            "httpGet": {
+                                "path": "/healthz",
+                                "port": 8080,
+                                "scheme": "HTTP"
+                            },
+                            "initialDelaySeconds": 5,
+                            "periodSeconds": 10,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 5
+                        },
+                        "name": "kube-state-metrics",
+                        "ports": [
+                            {
+                                "containerPort": 8080,
+                                "name": "http",
+                                "protocol": "TCP"
+                            }
+                        ],
+                        "readinessProbe": {
+                            "failureThreshold": 3,
+                            "httpGet": {
+                                "path": "/",
+                                "port": 8080,
+                                "scheme": "HTTP"
+                            },
+                            "initialDelaySeconds": 5,
+                            "periodSeconds": 10,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 5
+                        },
+                        "resources": {},
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-b4lxq",
+                                "readOnly": true
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "enableServiceLinks": true,
+                "nodeName": "minikube",
+                "preemptionPolicy": "PreemptLowerPriority",
+                "priority": 0,
+                "restartPolicy": "Always",
+                "schedulerName": "default-scheduler",
+                "securityContext": {
+                    "fsGroup": 65534,
+                    "runAsGroup": 65534,
+                    "runAsUser": 65534
+                },
+                "serviceAccount": "metricbeat-kube-state-metrics",
+                "serviceAccountName": "metricbeat-kube-state-metrics",
+                "terminationGracePeriodSeconds": 30,
+                "tolerations": [
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/not-ready",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    },
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/unreachable",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    }
+                ],
+                "volumes": [
+                    {
+                        "name": "kube-api-access-b4lxq",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "expirationSeconds": 3607,
+                                        "path": "token"
+                                    }
+                                },
+                                {
+                                    "configMap": {
+                                        "items": [
+                                            {
+                                                "key": "ca.crt",
+                                                "path": "ca.crt"
+                                            }
+                                        ],
+                                        "name": "kube-root-ca.crt"
+                                    }
+                                },
+                                {
+                                    "downwardAPI": {
+                                        "items": [
+                                            {
+                                                "fieldRef": {
+                                                    "apiVersion": "v1",
+                                                    "fieldPath": "metadata.namespace"
+                                                },
+                                                "path": "namespace"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2023-03-03T07:12:55Z",
+                        "status": "True",
+                        "type": "Initialized"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2023-03-03T07:13:06Z",
+                        "status": "True",
+                        "type": "Ready"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2023-03-03T07:13:06Z",
+                        "status": "True",
+                        "type": "ContainersReady"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2023-03-03T07:12:55Z",
+                        "status": "True",
+                        "type": "PodScheduled"
+                    }
+                ],
+                "containerStatuses": [
+                    {
+                        "containerID": "docker://d006d1870766ef1a4e9f29a5c51c7170489e7a82f3612d0248abc5b65ee2e8f5",
+                        "image": "k8s.gcr.io/kube-state-metrics/kube-state-metrics:v2.4.1",
+                        "imageID": "docker-pullable://k8s.gcr.io/kube-state-metrics/kube-state-metrics@sha256:69a18fa1e0d0c9f972a64e69ca13b65451b8c5e79ae8dccf3a77968be4a301df",
+                        "lastState": {},
+                        "name": "kube-state-metrics",
+                        "ready": true,
+                        "restartCount": 0,
+                        "started": true,
+                        "state": {
+                            "running": {
+                                "startedAt": "2023-03-03T07:12:57Z"
+                            }
+                        }
+                    }
+                ],
+                "hostIP": "192.168.49.2",
+                "phase": "Running",
+                "podIP": "10.244.0.103",
+                "podIPs": [
+                    {
+                        "ip": "10.244.0.103"
+                    }
+                ],
+                "qosClass": "BestEffort",
+                "startTime": "2023-03-03T07:12:55Z"
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "metadata": {
+                "annotations": {
+                    "configChecksum": "1e16e7a4fb24e7a741223a54dbf95f1e4222e2506570f6db0fa937f745e3ad1"
+                },
+                "creationTimestamp": "2023-03-03T07:12:55Z",
+                "generateName": "metricbeat-metricbeat-metrics-59bbff74d4-",
+                "labels": {
+                    "app": "metricbeat-metricbeat-metrics",
+                    "chart": "metricbeat-8.7.1",
+                    "pod-template-hash": "59bbff74d4",
+                    "release": "metricbeat"
+                },
+                "name": "metricbeat-metricbeat-metrics-59bbff74d4-nqcqr",
+                "namespace": "observe",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "apps/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "ReplicaSet",
+                        "name": "metricbeat-metricbeat-metrics-59bbff74d4",
+                        "uid": "4839ef1b-d63f-49f2-9d1a-f81fc6622ee9"
+                    }
+                ],
+                "resourceVersion": "195588",
+                "uid": "d9c925db-1204-42d9-8dac-c9fd83be5af1"
+            },
+            "spec": {
+                "affinity": {},
+                "containers": [
+                    {
+                        "args": [
+                            "-e",
+                            "-E",
+                            "http.enabled=true"
+                        ],
+                        "env": [
+                            {
+                                "name": "POD_NAMESPACE",
+                                "valueFrom": {
+                                    "fieldRef": {
+                                        "apiVersion": "v1",
+                                        "fieldPath": "metadata.namespace"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "KUBE_STATE_METRICS_HOSTS",
+                                "value": "$(METRICBEAT_KUBE_STATE_METRICS_SERVICE_HOST):$(METRICBEAT_KUBE_STATE_METRICS_SERVICE_PORT_HTTP)"
+                            },
+                            {
+                                "name": "ELASTICSEARCH_USERNAME",
+                                "valueFrom": {
+                                    "secretKeyRef": {
+                                        "key": "username",
+                                        "name": "elasticsearch-master-credentials"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "ELASTICSEARCH_PASSWORD",
+                                "valueFrom": {
+                                    "secretKeyRef": {
+                                        "key": "password",
+                                        "name": "elasticsearch-master-credentials"
+                                    }
+                                }
+                            }
+                        ],
+                        "image": "docker.elastic.co/beats/metricbeat:8.7.1",
+                        "imagePullPolicy": "IfNotPresent",
+                        "livenessProbe": {
+                            "exec": {
+                                "command": [
+                                    "sh",
+                                    "-c",
+                                    "#!/usr/bin/env bash -e\ncurl --fail 127.0.0.1:5066\n"
+                                ]
+                            },
+                            "failureThreshold": 3,
+                            "initialDelaySeconds": 10,
+                            "periodSeconds": 10,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 5
+                        },
+                        "name": "metricbeat",
+                        "readinessProbe": {
+                            "exec": {
+                                "command": [
+                                    "sh",
+                                    "-c",
+                                    "#!/usr/bin/env bash -e\nmetricbeat test output\n"
+                                ]
+                            },
+                            "failureThreshold": 3,
+                            "initialDelaySeconds": 10,
+                            "periodSeconds": 10,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 5
+                        },
+                        "resources": {
+                            "limits": {
+                                "cpu": "1",
+                                "memory": "200Mi"
+                            },
+                            "requests": {
+                                "cpu": "100m",
+                                "memory": "100Mi"
+                            }
+                        },
+                        "securityContext": {
+                            "privileged": false,
+                            "runAsUser": 0
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/usr/share/metricbeat/certs/",
+                                "name": "elasticsearch-master-certs"
+                            },
+                            {
+                                "mountPath": "/usr/share/metricbeat/metricbeat.yml",
+                                "name": "metricbeat-config",
+                                "readOnly": true,
+                                "subPath": "metricbeat.yml"
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-js7vr",
+                                "readOnly": true
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "enableServiceLinks": true,
+                "nodeName": "minikube",
+                "preemptionPolicy": "PreemptLowerPriority",
+                "priority": 0,
+                "restartPolicy": "Always",
+                "schedulerName": "default-scheduler",
+                "securityContext": {},
+                "serviceAccount": "metricbeat-metricbeat",
+                "serviceAccountName": "metricbeat-metricbeat",
+                "terminationGracePeriodSeconds": 30,
+                "tolerations": [
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/not-ready",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    },
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/unreachable",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    }
+                ],
+                "volumes": [
+                    {
+                        "name": "elasticsearch-master-certs",
+                        "secret": {
+                            "defaultMode": 420,
+                            "secretName": "elasticsearch-master-certs"
+                        }
+                    },
+                    {
+                        "configMap": {
+                            "defaultMode": 384,
+                            "name": "metricbeat-metricbeat-deployment-config"
+                        },
+                        "name": "metricbeat-config"
+                    },
+                    {
+                        "name": "kube-api-access-js7vr",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "expirationSeconds": 3607,
+                                        "path": "token"
+                                    }
+                                },
+                                {
+                                    "configMap": {
+                                        "items": [
+                                            {
+                                                "key": "ca.crt",
+                                                "path": "ca.crt"
+                                            }
+                                        ],
+                                        "name": "kube-root-ca.crt"
+                                    }
+                                },
+                                {
+                                    "downwardAPI": {
+                                        "items": [
+                                            {
+                                                "fieldRef": {
+                                                    "apiVersion": "v1",
+                                                    "fieldPath": "metadata.namespace"
+                                                },
+                                                "path": "namespace"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2023-03-03T07:12:55Z",
+                        "status": "True",
+                        "type": "Initialized"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2023-03-03T07:13:17Z",
+                        "status": "True",
+                        "type": "Ready"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2023-03-03T07:13:17Z",
+                        "status": "True",
+                        "type": "ContainersReady"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2023-03-03T07:12:55Z",
+                        "status": "True",
+                        "type": "PodScheduled"
+                    }
+                ],
+                "containerStatuses": [
+                    {
+                        "containerID": "docker://a9962efeca27274034c81264b7b82e88ea21bba79fdabc1eeeabad1626e0550c",
+                        "image": "docker.elastic.co/beats/metricbeat:8.7.1",
+                        "imageID": "docker://sha256:c43929043cdb7067021ad47f5c796f702096ee7f9c7f64baba0cd4d18d08339b",
+                        "lastState": {},
+                        "name": "metricbeat",
+                        "ready": true,
+                        "restartCount": 0,
+                        "started": true,
+                        "state": {
+                            "running": {
+                                "startedAt": "2023-03-03T07:12:57Z"
+                            }
+                        }
+                    }
+                ],
+                "hostIP": "192.168.49.2",
+                "phase": "Running",
+                "podIP": "10.244.0.102",
+                "podIPs": [
+                    {
+                        "ip": "10.244.0.102"
+                    }
+                ],
+                "qosClass": "Burstable",
+                "startTime": "2023-03-03T07:12:55Z"
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "metadata": {
+                "annotations": {
+                    "configChecksum": "1e16e7a4fb24e7a741223a54dbf95f1e4222e2506570f6db0fa937f745e3ad1"
+                },
+                "creationTimestamp": "2023-03-03T07:12:55Z",
+                "generateName": "metricbeat-metricbeat-",
+                "labels": {
+                    "app": "metricbeat-metricbeat",
+                    "chart": "metricbeat-8.7.1",
+                    "controller-revision-hash": "7ff48dddf8",
+                    "heritage": "Helm",
+                    "pod-template-generation": "1",
+                    "release": "metricbeat"
+                },
+                "name": "metricbeat-metricbeat-nlq9l",
+                "namespace": "observe",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "apps/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "DaemonSet",
+                        "name": "metricbeat-metricbeat",
+                        "uid": "525731dc-a7bc-440f-9df6-d08983b228a5"
+                    }
+                ],
+                "resourceVersion": "195591",
+                "uid": "b5dfefeb-3c16-455f-8e2c-dc6e082a6ca2"
+            },
+            "spec": {
+                "affinity": {
+                    "nodeAffinity": {
+                        "requiredDuringSchedulingIgnoredDuringExecution": {
+                            "nodeSelectorTerms": [
+                                {
+                                    "matchFields": [
+                                        {
+                                            "key": "metadata.name",
+                                            "operator": "In",
+                                            "values": [
+                                                "minikube"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                },
+                "containers": [
+                    {
+                        "args": [
+                            "-e",
+                            "-E",
+                            "http.enabled=true",
+                            "--system.hostfs=/hostfs"
+                        ],
+                        "env": [
+                            {
+                                "name": "POD_NAMESPACE",
+                                "valueFrom": {
+                                    "fieldRef": {
+                                        "apiVersion": "v1",
+                                        "fieldPath": "metadata.namespace"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "NODE_NAME",
+                                "valueFrom": {
+                                    "fieldRef": {
+                                        "apiVersion": "v1",
+                                        "fieldPath": "spec.nodeName"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "ELASTICSEARCH_USERNAME",
+                                "valueFrom": {
+                                    "secretKeyRef": {
+                                        "key": "username",
+                                        "name": "elasticsearch-master-credentials"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "ELASTICSEARCH_PASSWORD",
+                                "valueFrom": {
+                                    "secretKeyRef": {
+                                        "key": "password",
+                                        "name": "elasticsearch-master-credentials"
+                                    }
+                                }
+                            }
+                        ],
+                        "image": "docker.elastic.co/beats/metricbeat:8.7.1",
+                        "imagePullPolicy": "IfNotPresent",
+                        "livenessProbe": {
+                            "exec": {
+                                "command": [
+                                    "sh",
+                                    "-c",
+                                    "#!/usr/bin/env bash -e\ncurl --fail 127.0.0.1:5066\n"
+                                ]
+                            },
+                            "failureThreshold": 3,
+                            "initialDelaySeconds": 10,
+                            "periodSeconds": 10,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 5
+                        },
+                        "name": "metricbeat",
+                        "readinessProbe": {
+                            "exec": {
+                                "command": [
+                                    "sh",
+                                    "-c",
+                                    "#!/usr/bin/env bash -e\nmetricbeat test output\n"
+                                ]
+                            },
+                            "failureThreshold": 3,
+                            "initialDelaySeconds": 10,
+                            "periodSeconds": 10,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 5
+                        },
+                        "resources": {
+                            "limits": {
+                                "cpu": "1",
+                                "memory": "200Mi"
+                            },
+                            "requests": {
+                                "cpu": "100m",
+                                "memory": "100Mi"
+                            }
+                        },
+                        "securityContext": {
+                            "privileged": false,
+                            "runAsUser": 0
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/usr/share/metricbeat/certs/",
+                                "name": "elasticsearch-master-certs"
+                            },
+                            {
+                                "mountPath": "/usr/share/metricbeat/metricbeat.yml",
+                                "name": "metricbeat-config",
+                                "readOnly": true,
+                                "subPath": "metricbeat.yml"
+                            },
+                            {
+                                "mountPath": "/usr/share/metricbeat/data",
+                                "name": "data"
+                            },
+                            {
+                                "mountPath": "/var/run/docker.sock",
+                                "name": "varrundockersock",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/hostfs/proc",
+                                "name": "proc",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/hostfs/sys/fs/cgroup",
+                                "name": "cgroup",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-sksgm",
+                                "readOnly": true
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirstWithHostNet",
+                "enableServiceLinks": true,
+                "hostNetwork": true,
+                "nodeName": "minikube",
+                "preemptionPolicy": "PreemptLowerPriority",
+                "priority": 0,
+                "restartPolicy": "Always",
+                "schedulerName": "default-scheduler",
+                "securityContext": {},
+                "serviceAccount": "metricbeat-metricbeat",
+                "serviceAccountName": "metricbeat-metricbeat",
+                "terminationGracePeriodSeconds": 30,
+                "tolerations": [
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/not-ready",
+                        "operator": "Exists"
+                    },
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/unreachable",
+                        "operator": "Exists"
+                    },
+                    {
+                        "effect": "NoSchedule",
+                        "key": "node.kubernetes.io/disk-pressure",
+                        "operator": "Exists"
+                    },
+                    {
+                        "effect": "NoSchedule",
+                        "key": "node.kubernetes.io/memory-pressure",
+                        "operator": "Exists"
+                    },
+                    {
+                        "effect": "NoSchedule",
+                        "key": "node.kubernetes.io/pid-pressure",
+                        "operator": "Exists"
+                    },
+                    {
+                        "effect": "NoSchedule",
+                        "key": "node.kubernetes.io/unschedulable",
+                        "operator": "Exists"
+                    },
+                    {
+                        "effect": "NoSchedule",
+                        "key": "node.kubernetes.io/network-unavailable",
+                        "operator": "Exists"
+                    }
+                ],
+                "volumes": [
+                    {
+                        "name": "elasticsearch-master-certs",
+                        "secret": {
+                            "defaultMode": 420,
+                            "secretName": "elasticsearch-master-certs"
+                        }
+                    },
+                    {
+                        "configMap": {
+                            "defaultMode": 384,
+                            "name": "metricbeat-metricbeat-daemonset-config"
+                        },
+                        "name": "metricbeat-config"
+                    },
+                    {
+                        "hostPath": {
+                            "path": "/var/lib/metricbeat-metricbeat-observe-data",
+                            "type": "DirectoryOrCreate"
+                        },
+                        "name": "data"
+                    },
+                    {
+                        "hostPath": {
+                            "path": "/var/run/docker.sock",
+                            "type": ""
+                        },
+                        "name": "varrundockersock"
+                    },
+                    {
+                        "hostPath": {
+                            "path": "/proc",
+                            "type": ""
+                        },
+                        "name": "proc"
+                    },
+                    {
+                        "hostPath": {
+                            "path": "/sys/fs/cgroup",
+                            "type": ""
+                        },
+                        "name": "cgroup"
+                    },
+                    {
+                        "name": "kube-api-access-sksgm",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "expirationSeconds": 3607,
+                                        "path": "token"
+                                    }
+                                },
+                                {
+                                    "configMap": {
+                                        "items": [
+                                            {
+                                                "key": "ca.crt",
+                                                "path": "ca.crt"
+                                            }
+                                        ],
+                                        "name": "kube-root-ca.crt"
+                                    }
+                                },
+                                {
+                                    "downwardAPI": {
+                                        "items": [
+                                            {
+                                                "fieldRef": {
+                                                    "apiVersion": "v1",
+                                                    "fieldPath": "metadata.namespace"
+                                                },
+                                                "path": "namespace"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2023-03-03T07:12:55Z",
+                        "status": "True",
+                        "type": "Initialized"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2023-03-03T07:13:17Z",
+                        "status": "True",
+                        "type": "Ready"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2023-03-03T07:13:17Z",
+                        "status": "True",
+                        "type": "ContainersReady"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2023-03-03T07:12:55Z",
+                        "status": "True",
+                        "type": "PodScheduled"
+                    }
+                ],
+                "containerStatuses": [
+                    {
+                        "containerID": "docker://72cc364cbcc5df80d4a588470203db95abda938dac9d2989e6e7c4617909e818",
+                        "image": "docker.elastic.co/beats/metricbeat:8.7.1",
+                        "imageID": "docker://sha256:c43929043cdb7067021ad47f5c796f702096ee7f9c7f64baba0cd4d18d08339b",
+                        "lastState": {},
+                        "name": "metricbeat",
+                        "ready": true,
+                        "restartCount": 0,
+                        "started": true,
+                        "state": {
+                            "running": {
+                                "startedAt": "2023-03-03T07:12:57Z"
+                            }
+                        }
+                    }
+                ],
+                "hostIP": "192.168.49.2",
+                "phase": "Running",
+                "podIP": "192.168.49.2",
+                "podIPs": [
+                    {
+                        "ip": "192.168.49.2"
+                    }
+                ],
+                "qosClass": "Burstable",
+                "startTime": "2023-03-03T07:12:55Z"
+            }
+        }
+    ],
+    "kind": "List",
+    "metadata": {
+        "resourceVersion": ""
+    }
+}

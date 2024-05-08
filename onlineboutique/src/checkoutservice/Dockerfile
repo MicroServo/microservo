@@ -1,0 +1,53 @@
+# Copyright 2020 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+FROM golang:1.20.1-alpine@sha256:18da4399cedd9e383beb6b104d43aa1d48bd41167e312bb5306d72c51bd11548 as builder
+RUN apk add --no-cache ca-certificates git
+RUN apk add build-base
+WORKDIR /src
+
+# restore dependencies
+COPY go.mod go.sum ./
+ENV GOPROXY=https://proxy.golang.com.cn,direct
+RUN go mod download
+
+COPY . .
+
+# Skaffold passes in debug-oriented compiler flags
+ARG SKAFFOLD_GO_GCFLAGS
+RUN go build -gcflags="${SKAFFOLD_GO_GCFLAGS}" -o /checkoutservice .
+
+FROM alpine:3.17.2@sha256:69665d02cb32192e52e07644d76bc6f25abeb5410edc1c7a81a10ba3f0efb90a as without-grpc-health-probe-bin
+RUN apk add --no-cache ca-certificates
+
+WORKDIR /src
+COPY --from=builder /checkoutservice /src/checkoutservice
+
+# Definition of this variable is used by 'skaffold debug' to identify a golang binary.
+# Default behavior - a failure prints a stack trace for the current goroutine.
+# See https://golang.org/pkg/runtime/
+ENV GOTRACEBACK=single
+ENV ELASTIC_APM_SERVICE_NAME=checkoutservice
+ENV ELASTIC_APM_SERVER_URL=http://10.100.10.22:8200
+ENV ELASTIC_APM_SECRET_TOKEN=elastic
+ENV ELASTIC_APM_LOG_FILE=stderr 
+ENV ELASTIC_APM_LOG_LEVEL=debug
+
+EXPOSE 5050
+ENTRYPOINT ["/src/checkoutservice"]
+
+FROM without-grpc-health-probe-bin
+# renovate: datasource=github-releases depName=grpc-ecosystem/grpc-health-probe
+COPY grpc_health_probe-linux-amd64 /bin/grpc_health_probe
+RUN chmod +x /bin/grpc_health_probe

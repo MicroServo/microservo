@@ -1,0 +1,3 @@
+[submodule "build_image"]
+	path = build_image
+	url = http://10.10.1.209/aiops-principle-platform/onlineboutique.git
