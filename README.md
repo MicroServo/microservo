@@ -146,7 +146,7 @@ DATABASES = {
         'NAME': 'work',
         'USER': 'root',
         'PASSWORD': 'elastic',
-        'HOST': 'mysql_container_ip', # 需要自己修改
+        'HOST': 'mysql_container_ip',
         'PORT': '3306',
     }
 }
