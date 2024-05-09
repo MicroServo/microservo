@@ -3,3 +3,4 @@
 **/__pycache__
 **/temp/
 **/node_modules/
+**/.DS_Store
