@@ -1,0 +1,12 @@
+.DS_Store
+**/.DS_Store
+.DS_Store?
+# node modules
+**/node_modules/
+/dist/
+
+./config/index.js
+
+# .idea
+**/.idea/
+

@@ -1,0 +1,8 @@
+# api: https://10.10.1.202:9200
+api: https://localhost:9200
+username: elastic
+password: elastic
+prometheusApi: http://localhost:9090
+namespace: default
+trace_index: .ds-traces-apm-default-*
+logstash_index: logstash-*

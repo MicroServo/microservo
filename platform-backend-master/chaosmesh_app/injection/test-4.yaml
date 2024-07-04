@@ -1,0 +1,20 @@
+apiVersion: chaos-mesh.org/v1alpha1
+kind: StressChaos
+metadata:
+  name: test-4
+  namespace: default
+spec:
+  duration: 4m
+  mode: all
+  selector:
+    labelSelectors:
+      app: checkoutservice
+    namespaces:
+    - default
+    pods:
+      default:
+      - checkoutservice-0
+  stressors:
+    cpu:
+      load: 100
+      workers: 1

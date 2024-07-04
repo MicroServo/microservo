@@ -1,0 +1,32 @@
+apiVersion: chaos-mesh.org/v1alpha1
+kind: NetworkChaos
+metadata:
+  name: test-5
+  namespace: default
+spec:
+  action: delay
+  delay:
+    correlation: '50'
+    jitter: 200ms
+    latency: 2000ms
+  direction: to
+  duration: 7m
+  mode: all
+  selector:
+    labelSelectors:
+      app: checkoutservice
+    namespaces:
+    - default
+    pods:
+      default:
+      - checkoutservice-2
+  target:
+    mode: all
+    selector:
+      labelSelectors:
+        app: frontend
+      namespaces:
+      - default
+      pods:
+        default:
+        - frontend-0

@@ -1,0 +1,26 @@
+kind: Schedule
+apiVersion: chaos-mesh.org/v1alpha1
+metadata:
+  namespace: {namespace}
+  name: {name}
+spec:
+  schedule: {schedule}
+  startingDeadlineSeconds: null
+  concurrencyPolicy: Forbid
+  historyLimit: {historyLimit}
+  type: StressChaos
+  stressChaos:
+    selector:
+      namespaces:
+        - {namespace}
+      labelSelectors:
+        app: {app}
+      pods:
+        default:
+          {pods}
+    mode: all
+    stressors:
+      memory:
+        workers: {workers}
+        size: {size}
+    duration: {duration}

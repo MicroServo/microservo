@@ -1,0 +1,134 @@
+*[color-type],
+*[color-type="cpu"],
+*[color-type="emailservice"]  {
+  --base-color: #00a0ff;
+  --light-color: #e5f5ff;
+  --shadow-color: rgba(0, 160, 255, 0.5);
+}
+*[color-type="pod-failure"],
+*[color-type="checkoutservice"] {
+  --base-color: #f98b71;
+  --light-color: #fef3f0;
+  --shadow-color: rgba(255, 149, 0, 0.5);
+}
+*[color-type="network-delay"],
+*[color-type="recommendationservice"] {
+  --base-color: #4ac6c4;
+  --light-color: #e4ffff;
+  --shadow-color: rgba(0, 255, 229, 0.5);
+}
+*[color-type="memory"],
+*[color-type="frontend"] {
+  --base-color: #57cf95;
+  --light-color: #eefbf5;
+  --shadow-color: rgba(0, 255, 38, 0.5);
+}
+*[color-type="network-loss"],
+*[color-type="productcatalogservice"] {
+  --base-color: #7862e2;
+  --light-color: #f2effd;
+  --shadow-color: rgba(136, 0, 255, 0.5);
+}
+*[color-type="delay"],
+*[color-type="cartservice"] {
+  --base-color: #ca4dab;
+  --light-color: #ffe8f9;
+  --shadow-color: rgba(255, 0, 119, 0.5);
+}
+*[color-type="loss"],
+*[color-type="shippingservice"] {
+  --base-color: #bfc74e;
+  --light-color: #fdffe0;
+  --shadow-color: rgba(255, 251, 0, 0.5);
+}
+*[color-type="http"] {
+  --base-color: #cf5789;
+  --shadow-color: rgba(174, 54, 118, 0.5);
+}
+*[color-type="net"] {
+  --base-color: #57cf95;
+  --shadow-color: rgba(0, 255, 38, 0.5);
+}
+*[color-type="stress"] {
+  --base-color: #7862e2;
+  --shadow-color: rgba(136, 0, 255, 0.5);
+}
+*[color-type="pod"] {
+  --base-color: #00a0ff;
+  --shadow-color: rgba(0, 160, 255, 0.5);
+}
+*[color-type="io"] {
+  --base-color: #f98b71;
+  --shadow-color: rgba(255, 149, 0, 0.5);
+}
+
+/* vue transition 动画 */
+.opacity300-enter-active {
+  pointer-events: none !important;
+  animation: opacityAn 0.3s reverse;
+}
+.opacity300-leave-active {
+  pointer-events: none !important;
+  animation: opacityAn 0.3s ease;
+}
+.opacity300-enter-from,
+.opacity300-leave-to {
+  opacity: 0;
+}
+
+@keyframes opacityAn {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.link {
+  text-decoration: none;
+}
+.link:active {
+  text-decoration: none;
+}
+
+/* 全局检索样式 */
+* [search-results] {
+  background-color: #f06;
+  color: white;
+}
+.platform-json-viewer {
+  text-align: left;
+  height: auto;
+}
+.platform-json-viewer > div:nth-of-type(1) {
+  text-align: right;
+}
+.platform-json-viewer > div:nth-of-type(2) {
+  height: auto;
+  max-height: 100% !important;
+  overflow: auto;
+}
+.platform-json-viewer > div:nth-of-type(3) {
+  display: none;
+}
+.platform-json-viewer > div:nth-of-type(1) > span {
+  display: inline-block;
+  cursor: pointer;
+  padding: 5px;
+  background-color: rgba(0, 0, 0, 0.05);
+  transition: .2s;
+  min-width: 4rem;
+  border-radius: 5px;
+  color: #374E5C;
+  margin: 0 5px;
+  font-family: "OPPOSans-B";
+  font-size: 14px;
+  text-align: center;
+}
+.platform-json-viewer > div:nth-of-type(1) > span:hover {
+  transition: .2s;
+  background-color: #00A0FF;
+  box-shadow: 0px 2px 8px 0px rgba(0,160,255,0.5);
+  color: white;
+}

@@ -1,0 +1,77 @@
+@font-face {
+  font-family: "SYST-medium";
+  src: url('SourceHanSerifCN-Medium-6.otf');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SYST-heavy";
+  src: url('SourceHanSerifCN-Heavy-4.otf');
+  font-weight: heavy;
+  font-style: normal;
+}
+@font-face {
+  font-family: "OPPOSans-B";
+  src: url('opposans/OPPOSans-B.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "OPPOSans-H";
+  src: url('opposans/OPPOSans-H.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "OPPOSans-L";
+  src: url('opposans/OPPOSans-L.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "OPPOSans-M";
+  src: url('opposans/OPPOSans-M.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "OPPOSans-R";
+  src: url('opposans/OPPOSans-R.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+
+* [SYST-medium],
+* [S-M] {
+  font-family: "SYST-medium";
+}
+
+* [SYST-heavy],
+* [S-H] {
+  font-family: "SYST-heavy";
+}
+
+* [OPPOSans-B],
+* [O-B] {
+  font-family: "OPPOSans-B";
+}
+
+* [OPPOSans-H],
+* [O-H] {
+  font-family: "OPPOSans-H";
+}
+
+* [OPPOSans-L],
+* [O-L] {
+  font-family: "OPPOSans-L";
+}
+
+* [OPPOSans-M],
+* [O-M] {
+  font-family: "OPPOSans-M";
+}
+
+* [OPPOSans-R],
+* [O-R] {
+  font-family: "OPPOSans-R";
+}

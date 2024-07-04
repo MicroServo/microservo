@@ -1,0 +1,16 @@
+# mysql
+host: 172.17.0.2
+user: root
+password: elastic
+port: 3306
+database: wjj
+chaosmesh_database: chaos_mesh
+kubernetes_path: '~/.kube/config'
+dataset_dir: 'dataset_collector/dataset'
+algorithm_dir: djangoTemplate
+namespace: default
+es_use_cert: 'False'
+es_cert_path: './ca.pem'
+
+# chaos type
+chaos_type: 'NetworkChaos PodChaos HttpChaos StressChaos'

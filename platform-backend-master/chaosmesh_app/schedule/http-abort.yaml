@@ -1,0 +1,26 @@
+kind: Schedule
+apiVersion: chaos-mesh.org/v1alpha1
+metadata:
+  namespace: {namespace}
+  name: {name}
+spec:
+  schedule: {schedule}
+  startingDeadlineSeconds: null
+  concurrencyPolicy: Forbid
+  historyLimit: {historyLimit}
+  type: HTTPChaos
+  httpChaos:
+    selector:
+      namespaces:
+        - {namespace}
+      labelSelectors:
+        app: {app}
+      pods:
+        default:
+          {pods}
+    mode: all
+    target: Request
+    abort: true
+    port: {port}
+    path: '*'
+    duration: {duration}

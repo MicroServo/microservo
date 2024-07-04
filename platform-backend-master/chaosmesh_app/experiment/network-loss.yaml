@@ -1,0 +1,31 @@
+kind: NetworkChaos
+apiVersion: chaos-mesh.org/v1alpha1
+metadata:
+  namespace: {namespace}
+  name: {name}
+spec:
+  selector:
+    namespaces:
+      - {namespace}
+    labelSelectors:
+      app: {app}
+    pods:
+        default:
+          {pods}
+  mode: all
+  action: loss
+  duration: {duration}
+  loss:
+    loss: '{loss}'
+    correlation: '{correlation}'
+  direction: to
+  target:
+      selector:
+        namespaces:
+          - {namespace}
+        labelSelectors:
+          app: {targetapp}
+        pods:
+          default:
+            - {targetpods}
+      mode: all

@@ -1,0 +1,17 @@
+apiVersion: chaos-mesh.org/v1alpha1
+kind: PodChaos
+metadata:
+  name: test-2
+  namespace: default
+spec:
+  action: pod-failure
+  duration: 5m
+  mode: all
+  selector:
+    labelSelectors:
+      app: paymentservice
+    namespaces:
+    - default
+    pods:
+      default:
+      - paymentservice-0

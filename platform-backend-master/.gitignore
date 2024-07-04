@@ -1,0 +1,6 @@
+**/.idea/
+.vscode/
+**/__pycache__
+**/temp/
+djangoTemplate/
+dataset_collector/dataset/
